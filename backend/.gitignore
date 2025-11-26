@@ -3,3 +3,4 @@ config.ini
 pycache
 __pycache__
 .env
+.DS_Store

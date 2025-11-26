@@ -1,0 +1,217 @@
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+  <div class="flex items-center gap-2 mb-6">
+    <div class="p-2 bg-blue-600 rounded-full flex items-center justify-center">
+      <span class="text-white text-4xl">🔍</span>
+    </div>
+    <h2 class="text-lg font-semibold text-gray-900">Manual Search & Filter</h2>
+    <span class="text-sm text-gray-500">Filter candidates using dropdown selections</span>
+  </div>
+
+  <!-- Manual Search Filters -->
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+    <div class="flex flex-col gap-1">
+      <label for="location-select" class="text-xs font-medium text-gray-500 uppercase tracking-wide"
+        >Location</label
+      >
+      <select
+        id="location-select"
+        class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+        [ngModel]="manualLocationFilter"
+        (ngModelChange)="onManualLocationFilterChange($event)"
+        aria-label="Location"
+      >
+        @for (loc of manualFilterOptions.locations; track loc) {
+        <option [value]="loc">{{ loc }}</option>
+        }
+      </select>
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="grade-select" class="text-xs font-medium text-gray-500 uppercase tracking-wide"
+        >Grade</label
+      >
+      <select
+        id="grade-select"
+        class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+        [ngModel]="manualGradeFilter"
+        (ngModelChange)="onManualGradeFilterChange($event)"
+        aria-label="Grade"
+      >
+        @for (grade of manualFilterOptions.grades; track grade) {
+        <option [value]="grade">{{ grade }}</option>
+        }
+      </select>
+    </div>
+    <div class="flex flex-col gap-1">
+      <label
+        for="sc-clearance-select"
+        class="text-xs font-medium text-gray-500 uppercase tracking-wide"
+        >SC Clearance</label
+      >
+      <select
+        id="sc-clearance-select"
+        class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+        [ngModel]="manualScClearanceFilter"
+        (ngModelChange)="onManualScClearanceFilterChange($event)"
+      >
+        @for (sc of manualFilterOptions.scClearances; track sc) {
+        <option [value]="sc">{{ sc }}</option>
+        }
+      </select>
+    </div>
+    <div class="flex flex-col gap-1">
+      <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Availability</label>
+      <select
+        class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+        [ngModel]="manualAvailabilityFilter"
+        (ngModelChange)="onManualAvailabilityFilterChange($event)"
+        aria-label="Availability"
+      >
+        @for (av of manualFilterOptions.availabilities; track av) {
+        <option [value]="av">{{ av }}</option>
+        }
+      </select>
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="role-select" class="text-xs font-medium text-gray-500 uppercase tracking-wide"
+        >Role</label
+      >
+      <select
+        id="role-select"
+        class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+        [ngModel]="manualRoleFilter"
+        (ngModelChange)="onManualRoleFilterChange($event)"
+        aria-label="Role"
+      >
+        @for (role of manualFilterOptions.roles; track role) {
+        <option [value]="role">{{ role }}</option>
+        }
+      </select>
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="skills-select" class="text-xs font-medium text-gray-500 uppercase tracking-wide"
+        >Skills</label
+      >
+      <select
+        id="skills-select"
+        class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+        [ngModel]="manualSkillsFilter"
+        (ngModelChange)="onManualSkillsFilterChange($event)"
+      >
+        @for (skill of manualFilterOptions.skills; track skill) {
+        <option [value]="skill">{{ skill }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <!-- Results Count -->
+  <div class="mb-4">
+    <h3 class="text-lg font-semibold text-gray-900">
+      Candidates ({{ manualFilteredResults.length }})
+    </h3>
+    @if (isLoading) {
+    <p class="text-sm text-gray-500">Loading candidates...</p>
+    }
+  </div>
+
+  @if (manualFilteredResults.length > 0) {
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-gray-50">
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+            Name
+          </th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+            Location
+          </th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+            Grade
+          </th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+            Role
+          </th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+            SC Clearance
+          </th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+            Availability
+          </th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+            Key Skills
+          </th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        @for (candidate of manualFilteredResults; track candidate) {
+        <tr class="hover:bg-gray-50 transition-colors duration-150">
+          <!-- Name -->
+          <td class="px-4 py-3 text-sm">
+            <span class="font-medium text-gray-900">
+              {{ candidate.full_name }}
+            </span>
+          </td>
+
+          <!-- Location (country) -->
+          <td class="px-4 py-3 text-sm text-gray-600">
+            {{ candidate.country }}
+          </td>
+
+          <!-- Grade (department) -->
+          <td class="px-4 py-3 text-sm text-gray-600">
+            {{ candidate.department }}
+          </td>
+
+          <!-- Role (latest_cv_title) -->
+          <td class="px-4 py-3 text-sm text-gray-600">
+            {{ candidate.latest_cv_title }}
+          </td>
+
+          <!-- SC Clearance -->
+          <td class="px-4 py-3 text-sm">
+            <span
+              class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800"
+            >
+              {{ candidate.clearance || 'N/A' }}
+            </span>
+          </td>
+
+          <!-- Availability (%) -->
+          <td class="px-4 py-3 text-sm text-gray-600">{{ candidate.availability }}%</td>
+
+          <!-- Skills -->
+          <td class="px-4 py-3 text-sm text-gray-600">
+            {{ candidate.skills }}
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+
+  <!-- No Manual Results Message -->
+  @if (!isLoading && manualFilteredResults.length === 0 && manualCandidates.length > 0) {
+  <div class="bg-gray-50 rounded-lg p-8 text-center">
+    <div class="text-gray-400 mb-2">
+      <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+        />
+      </svg>
+    </div>
+    <p class="text-gray-500">No candidates match your current filters.</p>
+    <p class="text-sm text-gray-400 mt-2">Try adjusting your filter selections.</p>
+  </div>
+  }
+
+  <!-- Loading State for Manual Search -->
+  @if (!isLoading && manualCandidates.length === 0) {
+  <div class="bg-gray-50 rounded-lg p-8 text-center">
+    <p class="text-gray-500">Click "Manual Search" to load all candidates.</p>
+  </div>
+  }
+</div>

@@ -1,0 +1,6 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+:root {
+  --color-teal: #00c6c2;
+}

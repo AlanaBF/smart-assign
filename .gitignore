@@ -1,5 +1,31 @@
-# macOS system files
+# OS / editors
 .DS_Store
-
-# Windows system files
 Thumbs.db
+.vscode/
+.idea/
+
+# Python
+*.pyc
+__pycache__/
+.venv/
+.env
+*.pyo
+.pytest_cache/
+
+# Backend local config
+backend/.env
+backend/config.ini
+
+# Node / Angular
+frontend/smart-assign/node_modules/
+frontend/smart-assign/dist/
+frontend/smart-assign/.angular/
+frontend/smart-assign/.cache/
+
+# Build / logs
+*.log
+build/
+dist/
+
+# Misc
+coverage/

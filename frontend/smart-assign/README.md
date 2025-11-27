@@ -7,7 +7,7 @@ This folder contains the standalone Angular frontend for the Smart-Assign projec
 1. Install dependencies:
 
 ```bash
-cd angular-frontend/smart-assign
+cd frontend/smart-assign
 npm install
 ```
 
@@ -20,3 +20,7 @@ npm start
 ## Troubleshooting
 
 - If the frontend can't fetch candidates, confirm the backend is running on `http://localhost:8000` and CORS is configured to allow `http://localhost:4200`.
+
+## Configuration
+
+The frontend calls the backend API. If your backend runs on a different host/port, update the service endpoint in `src/app/services/candidate.service.ts`.

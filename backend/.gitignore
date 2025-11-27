@@ -1,7 +1,0 @@
-config.ini
-.venv/
-pycache
-__pycache__
-.env
-.DS_Store
-DS_Store

@@ -8,9 +8,9 @@ import { CandidateSummary } from '../models/candidate.model';
   providedIn: 'root'
 })
 export class CandidateService {
-  private baseUrl = 'http://localhost:8000/api';
+  private readonly baseUrl = 'http://localhost:8000/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   getAllCandidates(): Observable<CandidateSummary[]> {
     return this.http.get<CandidateSummary[]>(`${this.baseUrl}/all-candidates`);

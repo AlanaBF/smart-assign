@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CandidateService } from '../services/candidate.service';
@@ -9,7 +9,7 @@ import { CandidateSummary } from '../models/candidate.model';
   templateUrl: './manual-search.component.html',
   imports: [CommonModule, FormsModule],
 })
-export class ManualSearchComponent {
+export class ManualSearchComponent implements OnInit {
   manualCandidates: CandidateSummary[] = [];
   manualFilteredResults: CandidateSummary[] = [];
 
@@ -31,7 +31,7 @@ export class ManualSearchComponent {
   manualRoleFilter = 'Any';
   manualSkillsFilter = 'Any';
 
-  constructor(private candidateService: CandidateService) {}
+  constructor(private readonly candidateService: CandidateService) {}
 
   ngOnInit() {
     this.loadCandidates();
@@ -54,57 +54,82 @@ export class ManualSearchComponent {
   }
 
 
+  private parseSkills(skillsStr: string): string[] {
+    return skillsStr
+      .split(',')
+      .map(s => s.trim())
+      .filter(s => !!s);
+  }
+
   buildFilterOptions(): void {
     const locs = new Set<string>();
     const grades = new Set<string>();
     const roles = new Set<string>();
     const skills = new Set<string>();
 
-    this.manualCandidates.forEach(c => {
+    for (const c of this.manualCandidates) {
       if (c.country) locs.add(c.country);
       if (c.department) grades.add(c.department);           
       if (c.latest_cv_title) roles.add(c.latest_cv_title);
       if (c.skills) {
-        c.skills.split(',').map(s => s.trim()).forEach(s => {
-          if (s) skills.add(s);
-        });
+        for (const s of this.parseSkills(c.skills)) {
+          skills.add(s);
+        }
       }
-    });
+    }
 
-    this.manualFilterOptions.locations = ['Any', ...Array.from(locs).sort()];
-    this.manualFilterOptions.grades = ['Any', ...Array.from(grades).sort()];
-    this.manualFilterOptions.roles = ['Any', ...Array.from(roles).sort()];
-    this.manualFilterOptions.skills = ['Any', ...Array.from(skills).sort()];
+    this.manualFilterOptions.locations = ['Any', ...Array.from(locs).sort((a, b) => a.localeCompare(b))];
+    this.manualFilterOptions.grades = ['Any', ...Array.from(grades).sort((a, b) => a.localeCompare(b))];
+    this.manualFilterOptions.roles = ['Any', ...Array.from(roles).sort((a, b) => a.localeCompare(b))];
+    this.manualFilterOptions.skills = ['Any', ...Array.from(skills).sort((a, b) => a.localeCompare(b))];
+  }
+
+  private locationMatches(candidate: CandidateSummary): boolean {
+    return this.manualLocationFilter === 'Any' || candidate.country === this.manualLocationFilter;
+  }
+
+  private gradeMatches(candidate: CandidateSummary): boolean {
+    return this.manualGradeFilter === 'Any' || candidate.department === this.manualGradeFilter;
+  }
+
+  private scClearanceMatches(candidate: CandidateSummary): boolean {
+    if (this.manualScClearanceFilter === 'Any') return true;
+    return candidate.clearance === this.manualScClearanceFilter;
+  }
+
+  private roleMatches(candidate: CandidateSummary): boolean {
+    return this.manualRoleFilter === 'Any' || candidate.latest_cv_title === this.manualRoleFilter;
+  }
+
+  private availabilityMatches(candidate: CandidateSummary): boolean {
+    switch (this.manualAvailabilityFilter) {
+      case 'Any':
+        return true;
+      case '>= 25%':
+        return candidate.availability >= 25;
+      case '>= 50%':
+        return candidate.availability >= 50;
+      case '>= 75%':
+        return candidate.availability >= 75;
+      default:
+        return true;
+    }
+  }
+
+  private skillsMatches(candidate: CandidateSummary): boolean {
+    if (this.manualSkillsFilter === 'Any') return true;
+    return candidate.skills?.toLowerCase().includes(this.manualSkillsFilter.toLowerCase()) ?? false;
   }
 
   applyFilters(): void {
-    this.manualFilteredResults = this.manualCandidates.filter(c => {
-      if (this.manualLocationFilter !== 'Any' && c.country !== this.manualLocationFilter) {
-        return false;
-      }
-      if (this.manualGradeFilter !== 'Any' && c.department !== this.manualGradeFilter) {
-        return false;
-      }
-      if (this.manualScClearanceFilter !== 'Any') {
-        if (this.manualScClearanceFilter === 'SC' && c.clearance !== 'SC') return false;
-        if (this.manualScClearanceFilter === 'DV' && c.clearance !== 'DV') return false;
-        if (this.manualScClearanceFilter === 'NPPV2' && c.clearance !== 'NPPV2') return false;
-      }
-      if (this.manualRoleFilter !== 'Any' && c.latest_cv_title !== this.manualRoleFilter) {
-        return false;
-      }
-      if (this.manualAvailabilityFilter === '>= 25%' && c.availability < 25) return false;
-      if (this.manualAvailabilityFilter === '>= 50%' && c.availability < 50) return false;
-      if (this.manualAvailabilityFilter === '>= 75%' && c.availability < 75) return false;
-
-      if (this.manualSkillsFilter !== 'Any') {
-        if (!c.skills?.toLowerCase().includes(this.manualSkillsFilter.toLowerCase())) {
-          return false;
-        }
-      }
-
-      return true;
-    });
+    this.manualFilteredResults = this.manualCandidates.filter(c =>
+      this.locationMatches(c) &&
+      this.gradeMatches(c) &&
+      this.scClearanceMatches(c) &&
+      this.roleMatches(c) &&
+      this.availabilityMatches(c) &&
+      this.skillsMatches(c)
+    );
   }
 
   onManualLocationFilterChange(value: string) {

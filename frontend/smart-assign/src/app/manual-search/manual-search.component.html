@@ -10,15 +10,15 @@
   <!-- Manual Search Filters -->
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
     <div class="flex flex-col gap-1">
-      <label for="location-select" class="text-xs font-medium text-gray-500 uppercase tracking-wide"
-        >Location</label
-      >
+      <label for="location-select" class="text-xs font-medium text-gray-500 uppercase tracking-wide">
+        Location
+      </label>
       <select
         id="location-select"
         class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
         [ngModel]="manualLocationFilter"
         (ngModelChange)="onManualLocationFilterChange($event)"
-        aria-label="Location"
+        aria-labelledby="location-select-label"
       >
         @for (loc of manualFilterOptions.locations; track loc) {
         <option [value]="loc">{{ loc }}</option>
@@ -34,7 +34,6 @@
         class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
         [ngModel]="manualGradeFilter"
         (ngModelChange)="onManualGradeFilterChange($event)"
-        aria-label="Grade"
       >
         @for (grade of manualFilterOptions.grades; track grade) {
         <option [value]="grade">{{ grade }}</option>
@@ -59,12 +58,12 @@
       </select>
     </div>
     <div class="flex flex-col gap-1">
-      <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Availability</label>
+      <label for="availability-select" class="text-xs font-medium text-gray-500 uppercase tracking-wide">Availability</label>
       <select
+        id="availability-select"
         class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
         [ngModel]="manualAvailabilityFilter"
         (ngModelChange)="onManualAvailabilityFilterChange($event)"
-        aria-label="Availability"
       >
         @for (av of manualFilterOptions.availabilities; track av) {
         <option [value]="av">{{ av }}</option>
@@ -80,7 +79,6 @@
         class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
         [ngModel]="manualRoleFilter"
         (ngModelChange)="onManualRoleFilterChange($event)"
-        aria-label="Role"
       >
         @for (role of manualFilterOptions.roles; track role) {
         <option [value]="role">{{ role }}</option>

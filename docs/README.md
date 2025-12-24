@@ -2,6 +2,9 @@
 
 This directory contains the Sphinx documentation for the Smart-Assign project.
 
+![Documentation Preview](assets/documentation-preview.png)
+*Example of the generated documentation using Sphinx Book Theme*
+
 ## Prerequisites
 
 - Python 3.7+

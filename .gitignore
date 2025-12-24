@@ -27,5 +27,14 @@ frontend/smart-assign/.cache/
 build/
 dist/
 
+# Sphinx Documentation
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# Python bytecode
+*.pyc
+__pycache__/
+
 # Misc
 coverage/

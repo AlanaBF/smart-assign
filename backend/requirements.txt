@@ -3,3 +3,8 @@ psycopg2-binary
 uvicorn[standard]
 sqlalchemy>=2.0
 python-dotenv
+sphinx
+sphinx-autodoc-typehints
+furo
+sphinx-book-theme
+pydata-sphinx-theme
